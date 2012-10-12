@@ -67,14 +67,14 @@
 	function sortByName($a, $b) { return ($a['isdir'] == $b['isdir'] ? strtolower($a['name']) > strtolower($b['name']) : $a['isdir'] < $b['isdir']); }
 	function sortBySize($a, $b) { return ($a['size'] > $b['size']); }
 	function sortByTime($a, $b) { return ($a['time'] > $b['time']); }
-	switch ($_GET['s']) {
+	switch (@$_GET['s']) {
 		case 'size': $_sort = 'size'; usort($items, 'sortBySize'); break;
 		case 'time': $_sort = 'time'; usort($items, 'sortByTime'); break;
 		default    : $_sort = 'name'; usort($items, 'sortByName'); break;
 	}
 	
 	// Reverse?
-	$_sort_reverse = ($_GET['r'] == '1');
+	$_sort_reverse = (@$_GET['r'] == '1');
 	if ($_sort_reverse) $items = array_reverse($items);
 	
 	// Add parent
@@ -311,7 +311,7 @@
 				
 					<span class="size"><?php echo $item['isdir'] ? '-' : humanizeFilesize($item['size'], $sizeDecimals) ?></span>
 					
-					<span class="date"><?php echo ($item['isparent']) ? '-' : date($dateFormat, $item['time']) ?></span>
+					<span class="date"><?php echo (@$item['isparent']) ? '-' : date($dateFormat, $item['time']) ?></span>
 					
 					<a href="<?php echo htmlentities($item['name']) ?>" class="name <?php if ($showIcons) echo $item['isdir'] ? 'directory' : 'file' ?>"><?php echo htmlentities($item['name']) . ($item['isdir'] ? ' /' : '') ?></a>
 					
