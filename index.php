@@ -115,6 +115,7 @@
 	
 	<meta charset="UTF-8">
 	<meta name="robots" content="<?php echo htmlentities($robots) ?>">
+	<meta name="viewport" content="width=device-width">
 	
 	<title><?php echo htmlentities(getTitle($title)) ?></title>
 	
@@ -134,7 +135,8 @@
 		}
 		
 		#wrapper {
-			width: 600px;
+			max-width: 600px;
+			*width: 600px;
 			margin: 0 auto;
 			text-align: left;
 		}
