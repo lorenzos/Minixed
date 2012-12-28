@@ -65,7 +65,7 @@
 	
 	// Sort it
 	function sortByName($a, $b) { return ($a['isdir'] == $b['isdir'] ? strtolower($a['name']) > strtolower($b['name']) : $a['isdir'] < $b['isdir']); }
-	function sortBySize($a, $b) { return ($a['size'] > $b['size']); }
+	function sortBySize($a, $b) { return ($a['isdir'] == $b['isdir'] ? $a['size'] > $b['size'] : $a['isdir'] < $b['isdir']); }
 	function sortByTime($a, $b) { return ($a['time'] > $b['time']); }
 	switch (@$_GET['s']) {
 		case 'size': $_sort = 'size'; usort($items, 'sortBySize'); break;
