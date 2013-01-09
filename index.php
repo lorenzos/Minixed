@@ -272,6 +272,7 @@
 			color: #cccccc;
 			font-size: 11px;
 			margin-top: 40px;
+			margin-bottom: 20px;
 			padding: 0 10px;
 			text-align: left;
 		}
