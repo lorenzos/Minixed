@@ -11,6 +11,8 @@ How to use
 Just drop the [**`index.php`**](https://github.com/lorenzos/Minixed/blob/master/index.php) 
 script in the same directory that contains files you want to index.
 
+	wget https://raw.githubusercontent.com/lorenzos/Minixed/master/index.php
+
 > *«Really? One single file?»* Yes, really. Glad you asked.  
 > *«If so, where are icon files?»* They are hard coded into the source, thanks Base-64.  
 > *«Was it really necessary?»* I don't know, I just loved the idea you need only one file.
