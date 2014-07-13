@@ -115,7 +115,7 @@
 	
 	<meta charset="UTF-8">
 	<meta name="robots" content="<?php echo htmlentities($robots) ?>">
-	<meta name="viewport" content="width=device-width">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 	<title><?php echo htmlentities(getTitle($title)) ?></title>
 	
