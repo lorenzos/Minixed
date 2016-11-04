@@ -66,4 +66,4 @@ Bug tracking and developing
 If you find bugs, if you have suggestions, if you modified the script adding 
 features or improvements, feel free to contribute by opening 
 [**Issues**](https://github.com/lorenzos/Minixed/issues) or 
-[**Pull Requests**](https://github.com/lorenzos/Minixed/fork).
+[**Pull Requests**](https://github.com/lorenzos/Minixed/pulls).
