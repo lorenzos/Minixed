@@ -2,8 +2,8 @@
 **Minixed** is a minimal but nice-looking PHP directory indexer.  
 You can see it as a replacement for the Apache `mod_autoindex`.
 
-> *«How does it look?»* Like [**this**](http://www.lorenzostanco.com/minixed_demo/).  
-> *«I don't like it.»* You are a CSS master, right? Good, you know what to do.
+> *Â«How does it look?Â»* Like [**this**](http://www.lorenzostanco.com/minixed_demo/).  
+> *Â«I don't like it.Â»* You are a CSS master, right? Good, you know what to do.
 
 How to use
 ----------
@@ -13,12 +13,13 @@ script in the same directory that contains files you want to index.
 
 	wget https://raw.githubusercontent.com/lorenzos/Minixed/master/index.php
 
-> *«Really? One single file?»* Yes, really. Glad you asked.  
-> *«If so, where are icon files?»* They are hard coded into the source, thanks Base-64.  
-> *«Was it really necessary?»* I don't know, I just loved the idea you need only one file.
+> *Â«Really? One single file?Â»* Yes, really. Glad you asked.  
+> *Â«If so, where are icon files?Â»* They are hard coded into the source, thanks Base-64.  
+> *Â«Was it really necessary?Â»* I don't know, I just loved the idea you need only one file.
 
-If you want Minixed to work also in subfolders, you need to place a copy of `index.php`
-in every directory you want to index.
+If you want Minixed to work also in subfolders, edit `index.php` setting:
+
+	$browseDirectories = true; // Navigate into sub-folders
 
 Configuration
 -------------
@@ -27,6 +28,10 @@ The script works well out-of-the-box, and generally you want to leave it as it i
 
 However if you have some particular needs, there are some PHP variables placed 
 in the first lines of `index.php` you can edit.
+
+You can enable navigation into subfolders using:
+
+	$browseDirectories = true; // Navigate into sub-folders
 
 You can change the page title (and subtitle) providing strings that can contains
 some placeholders that will be *parsed* at runtime:

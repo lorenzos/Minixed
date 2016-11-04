@@ -7,6 +7,7 @@
 	// Configuration                
 	// =============================
 	
+	$browseDirectories = false; // Navigate into sub-folders
 	$title = 'Index of {{path}}';
 	$subtitle = '{{files}} objects in this folder, {{size}} total'; // Empty to disable
 	$showParent = false; // Display a (parent directory) link
@@ -27,6 +28,12 @@
 	$_path = str_replace('\\', '/', dirname($_SERVER['PHP_SELF']));
 	$_total = 0;
 	$_total_size = 0;
+	
+	// Directory browsing
+	$_browse = null;
+	$_GET['b'] = trim(str_replace('\\', '/', $_GET['b']), '/ ');
+	$_GET['b'] = str_replace(array('/..', '../'), '', $_GET['b']); // Avoid going up into filesystem
+	if (!empty($_GET['b'] && $_GET['b'] != '..') && is_dir($_GET['b'])) $_browse = $_GET['b'];
 	
 	// Encoded images generator
 	if (!empty($_GET['i'])) {
@@ -61,7 +68,7 @@
 	}
 	
 	// Get the list of files
-	$items = ls('.', $showDirectories, $showHiddenFiles);
+	$items = ls('.' . (empty($_browse) ? '' : '/' . $_browse), $showDirectories, $showHiddenFiles);
 	
 	// Sort it
 	function sortByName($a, $b) { return ($a['isdir'] == $b['isdir'] ? strtolower($a['name']) > strtolower($b['name']) : $a['isdir'] < $b['isdir']); }
@@ -78,9 +85,18 @@
 	if ($_sort_reverse) $items = array_reverse($items);
 	
 	// Add parent
-	if ($showParent && $_path != '/') array_unshift($items, array(
+	if ($showParent && $_path != '/' && empty($_browse)) array_unshift($items, array(
 		'name' => '..',
 		'isparent' => true,
+		'isdir' => true,
+		'size' => 0,
+		'time' => 0
+	));
+
+	// Add parent in case of browsing a sub-folder
+	if (!empty($_browse)) array_unshift($items, array(
+		'name' => '..',
+		'isparent' => false,
 		'isdir' => true,
 		'size' => 0,
 		'time' => 0
@@ -314,9 +330,21 @@
 				
 					<span class="size"><?php echo $item['isdir'] ? '-' : humanizeFilesize($item['size'], $sizeDecimals) ?></span>
 					
-					<span class="date"><?php echo (@$item['isparent']) ? '-' : date($dateFormat, $item['time']) ?></span>
+					<span class="date"><?php echo (@$item['isparent'] || empty($item['time'])) ? '-' : date($dateFormat, $item['time']) ?></span>
 					
-					<a href="<?php echo htmlentities($item['name']) ?>" class="name <?php if ($showIcons) echo $item['isdir'] ? 'directory' : 'file' ?>"><?php echo htmlentities($item['name']) . ($item['isdir'] ? ' /' : '') ?></a>
+					<?php
+						if ($item['isdir'] && $browseDirectories && !@$item['isparent']) {
+							if ($item['name'] == '..') {
+								$itemURL = buildLink(array('b' => substr($_browse, 0, strrpos($_browse, '/'))));
+							} else {
+								$itemURL = buildLink(array('b' => (empty($_browse) ? '' : (string)$_browse . '/') . $item['name']));
+							}
+						} else {
+							$itemURL = $item['name'];
+						}
+					?>
+					
+					<a href="<?php echo htmlentities($itemURL) ?>" class="name <?php if ($showIcons) echo $item['isdir'] ? 'directory' : 'file' ?>"><?php echo htmlentities($item['name']) . ($item['isdir'] ? ' /' : '') ?></a>
 					
 				</li>
 				
