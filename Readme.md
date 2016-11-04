@@ -25,7 +25,6 @@ Configuration
 -------------
 
 The script works well out-of-the-box, and generally you want to leave it as it is.
-
 However if you have some particular needs, there are some PHP variables placed 
 in the first lines of `index.php` you can edit.
 
