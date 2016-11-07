@@ -33,7 +33,7 @@
 	$_browse = null;
 	$_GET['b'] = trim(str_replace('\\', '/', $_GET['b']), '/ ');
 	$_GET['b'] = str_replace(array('/..', '../'), '', $_GET['b']); // Avoid going up into filesystem
-	if (!empty($_GET['b'] && $_GET['b'] != '..') && is_dir($_GET['b'])) $_browse = $_GET['b'];
+	if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
 	
 	// Encoded images generator
 	if (!empty($_GET['i'])) {
