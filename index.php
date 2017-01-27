@@ -340,7 +340,7 @@
 								$itemURL = buildLink(array('b' => (empty($_browse) ? '' : (string)$_browse . '/') . $item['name']));
 							}
 						} else {
-							$itemURL = $item['name'];
+							$itemURL = (empty($_browse) ? '' : (string)$_browse . '/') . $item['name'];
 						}
 					?>
 					
