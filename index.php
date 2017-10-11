@@ -19,6 +19,7 @@
 	$sizeDecimals = 1;
 	$robots = 'noindex, nofollow'; // Avoid robots by default
 	$showFooter = true; // Display the "Powered by" footer
+	$openIndex = true; // Open index files present in the current directory
 	
 	// =============================
 	// =============================
@@ -35,6 +36,19 @@
 	$_GET['b'] = str_replace(array('/..', '../'), '', $_GET['b']); // Avoid going up into filesystem
 	if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
 	
+	// Index open
+	if ($openIndex) {
+		if (file_exists($_browse . "/index.htm")) {
+			header('Location: ' . $_browse . "/index.htm");
+		}
+		if (file_exists($_browse . "/index.html")) {
+			header('Location: ' . $_browse . "/index.html");
+		}
+		if (file_exists($_browse . "/index.php")) {
+			header('Location: ' . $_browse . "/index.php");
+		}
+	}
+
 	// Encoded images generator
 	if (!empty($_GET['i'])) {
 		header('Content-type: image/png');
