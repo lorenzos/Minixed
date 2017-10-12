@@ -19,7 +19,7 @@
 	$sizeDecimals = 1;
 	$robots = 'noindex, nofollow'; // Avoid robots by default
 	$showFooter = true; // Display the "Powered by" footer
-	$openIndex = true; // Open index files present in the current directory
+	$openIndex = $browseDirectories && true; // Open index files present in the current directory if browseDirectories is enabled
 	
 	// =============================
 	// =============================
@@ -32,21 +32,19 @@
 	
 	// Directory browsing
 	$_browse = null;
-	$_GET['b'] = trim(str_replace('\\', '/', $_GET['b']), '/ ');
-	$_GET['b'] = str_replace(array('/..', '../'), '', $_GET['b']); // Avoid going up into filesystem
-	if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
+	if ($browseDirectories) {
+		$_GET['b'] = trim(str_replace('\\', '/', $_GET['b']), '/ ');
+		$_GET['b'] = str_replace(array('/..', '../'), '', $_GET['b']); // Avoid going up into filesystem
+		if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
+	}
 	
 	// Index open
-	if ($openIndex) {
-		if (file_exists($_browse . "/index.htm")) {
-			header('Location: ' . $_browse . "/index.htm");
-		}
-		if (file_exists($_browse . "/index.html")) {
-			header('Location: ' . $_browse . "/index.html");
-		}
-		if (file_exists($_browse . "/index.php")) {
-			header('Location: ' . $_browse . "/index.php");
-		}
+	if (!empty($_browse) && $openIndex) {
+        $_index = null;
+		if (file_exists($_browse . "/index.htm")) $_index = "/index.htm";
+		if (file_exists($_browse . "/index.html")) $_index = "/index.html";
+		if (file_exists($_browse . "/index.php")) $_index = "/index.php";
+        if (!empty($_index)) header('Location: ' . $_browse . $_index);
 	}
 
 	// Encoded images generator
@@ -125,8 +123,8 @@
 	
 	// Titles parser
 	function getTitle($title) {
-		global $_path, $_total, $_total_size, $sizeDecimals;
-		return str_replace(array('{{path}}', '{{files}}', '{{size}}'), array($_path, $_total, humanizeFilesize($_total_size, $sizeDecimals)), $title);
+		global $_path, $_browse, $_total, $_total_size, $sizeDecimals;
+		return str_replace(array('{{path}}', '{{files}}', '{{size}}'), array($_path . $_browse, $_total, humanizeFilesize($_total_size, $sizeDecimals)), $title);
 	}
 	
 	// Link builder
