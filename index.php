@@ -127,7 +127,9 @@
 	// Titles parser
 	function getTitle($title) {
 		global $_path, $_browse, $_total, $_total_size, $sizeDecimals;
-		return str_replace(array('{{path}}', '{{files}}', '{{size}}'), array($_path . $_browse, $_total, humanizeFilesize($_total_size, $sizeDecimals)), $title);
+		$path = $_path;
+		if (!empty($_browse)) $path = $path . ($path != '/' ? '/' : '') . $_browse;
+		return str_replace(array('{{path}}', '{{files}}', '{{size}}'), array($path, $_total, humanizeFilesize($_total_size, $sizeDecimals)), $title);
 	}
 	
 	// Link builder
