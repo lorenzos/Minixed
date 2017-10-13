@@ -44,7 +44,10 @@
 		if (file_exists($_browse . "/index.htm")) $_index = "/index.htm";
 		if (file_exists($_browse . "/index.html")) $_index = "/index.html";
 		if (file_exists($_browse . "/index.php")) $_index = "/index.php";
-		if (!empty($_index)) header('Location: ' . $_browse . $_index);
+		if (!empty($_index)) {
+			header('Location: ' . $_browse . $_index);
+			exit();
+		}
 	}
 
 	// Encoded images generator
