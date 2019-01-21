@@ -33,8 +33,8 @@
 	// Directory browsing
 	$_browse = null;
 	if ($browseDirectories) {
-		$_GET['b'] = trim(str_replace('\\', '/', $_GET['b']), '/ ');
-		$_GET['b'] = str_replace(array('/..', '../'), '', $_GET['b']); // Avoid going up into filesystem
+		$_GET['b'] = trim(str_replace('\\', '/', @$_GET['b']), '/ ');
+		$_GET['b'] = str_replace(array('/..', '../'), '', @$_GET['b']); // Avoid going up into filesystem
 		if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
 	}
 	
