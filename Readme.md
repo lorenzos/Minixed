@@ -42,6 +42,7 @@ You can tell the script how to build the files list using:
 	
 	$showParent = false; // Display a (parent directory) link
 	$showDirectories = true;
+	$showDirectoriesFirst = true; // Lists directories first when sorting by name
 	$showHiddenFiles = false; // Display files starting with "." too
 	
 And how that list should look:

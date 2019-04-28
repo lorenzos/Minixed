@@ -12,6 +12,7 @@
 	$subtitle = '{{files}} objects in this folder, {{size}} total'; // Empty to disable
 	$showParent = false; // Display a (parent directory) link
 	$showDirectories = true;
+	$showDirectoriesFirst = true; // Lists directories first when sorting by name
 	$showHiddenFiles = false; // Display files starting with "." too
 	$alignment = 'left'; // You can use 'left' or 'center'
 	$showIcons = true;
@@ -86,7 +87,7 @@
 	$items = ls('.' . (empty($_browse) ? '' : '/' . $_browse), $showDirectories, $showHiddenFiles);
 	
 	// Sort it
-	function sortByName($a, $b) { return ($a['isdir'] == $b['isdir'] ? strtolower($a['name']) > strtolower($b['name']) : $a['isdir'] < $b['isdir']); }
+	function sortByName($a, $b) { global $showDirectoriesFirst; return ($a['isdir'] == $b['isdir'] || !$showDirectoriesFirst ? strtolower($a['name']) > strtolower($b['name']) : $a['isdir'] < $b['isdir']); }
 	function sortBySize($a, $b) { return ($a['isdir'] == $b['isdir'] ? $a['size'] > $b['size'] : $a['isdir'] < $b['isdir']); }
 	function sortByTime($a, $b) { return ($a['time'] > $b['time']); }
 	switch (@$_GET['s']) {
