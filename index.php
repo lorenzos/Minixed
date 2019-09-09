@@ -21,7 +21,8 @@
 	$sizeDecimals = 1;
 	$robots = 'noindex, nofollow'; // Avoid robots by default
 	$showFooter = true; // Display the "Powered by" footer
-	$openIndex = $browseDirectories && true; // Open index files present in the current directory if browseDirectories is enabled
+	$openIndex = $browseDirectories && true; // Open index files present in the current directory if $browseDirectories is enabled
+	$browseDefault = null; // Start on a different "default" directory if $browseDirectories is enabled
 	
 	// =============================
 	// =============================
@@ -35,6 +36,7 @@
 	// Directory browsing
 	$_browse = null;
 	if ($browseDirectories) {
+		if (!empty($browseDefault) && !isset($_GET['b'])) $_GET['b'] = $browseDefault;
 		$_GET['b'] = trim(str_replace('\\', '/', @$_GET['b']), '/ ');
 		$_GET['b'] = str_replace(array('/..', '../'), '', @$_GET['b']); // Avoid going up into filesystem
 		if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
@@ -131,7 +133,7 @@
 		global $_path, $_browse, $_total, $_total_size, $sizeDecimals;
 		$title = htmlentities(str_replace(array('{{files}}', '{{size}}'), array($_total, humanizeFilesize($_total_size, $sizeDecimals)), $title));
 		$path = htmlentities($_path);
-		if ($breadcrumbs) $path = sprintf('<a href="%s">%s</a>', htmlentities(buildLink(array('b' => null))), $path);
+		if ($breadcrumbs) $path = sprintf('<a href="%s">%s</a>', htmlentities(buildLink(array('b' => ''))), $path);
 		if (!empty($_browse)) {
 			if ($_path != '/') $path .= '/';
 			$browseArray = explode('/', trim($_browse, '/'));
