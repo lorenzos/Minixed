@@ -10,6 +10,7 @@
 	$browseDirectories = false; // Navigate into sub-folders
 	$title = 'Index of {{path}}';
 	$subtitle = '{{files}} objects in this folder, {{size}} total'; // Empty to disable
+	$breadcrumbs = false; // Make links in {{path}}
 	$showParent = false; // Display a (parent directory) link
 	$showDirectories = true;
 	$showDirectoriesFirst = true; // Lists directories first when sorting by name
@@ -126,11 +127,24 @@
 	}
 	
 	// Titles parser
-	function getTitle($title) {
+	function getTitleHTML($title, $breadcrumbs = false) {
 		global $_path, $_browse, $_total, $_total_size, $sizeDecimals;
-		$path = $_path;
-		if (!empty($_browse)) $path = $path . ($path != '/' ? '/' : '') . $_browse;
-		return str_replace(array('{{path}}', '{{files}}', '{{size}}'), array($path, $_total, humanizeFilesize($_total_size, $sizeDecimals)), $title);
+		$title = htmlentities(str_replace(array('{{files}}', '{{size}}'), array($_total, humanizeFilesize($_total_size, $sizeDecimals)), $title));
+		$path = htmlentities($_path);
+		if ($breadcrumbs) $path = sprintf('<a href="%s">%s</a>', htmlentities(buildLink(array('b' => null))), $path);
+		if (!empty($_browse)) {
+			if ($_path != '/') $path .= '/';
+			$browseArray = explode('/', trim($_browse, '/'));
+			foreach ($browseArray as $i => $part) {
+				if ($breadcrumbs) {
+					$path .= sprintf('<a href="%s">%s</a>', htmlentities(buildLink(array('b' => implode('/', array_slice($browseArray, 0, $i + 1))))), htmlentities($part));
+				} else {
+					$path .= htmlentities($part);
+				}
+				if (count($browseArray) > ($i + 1)) $path .= '/';
+			}
+		}
+		return str_replace('{{path}}', $path, $title);
 	}
 	
 	// Link builder
@@ -151,7 +165,7 @@
 	<meta name="robots" content="<?php echo htmlentities($robots) ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
-	<title><?php echo htmlentities(getTitle($title)) ?></title>
+	<title><?php echo getTitleHTML($title) ?></title>
 	
 	<style type="text/css">
 		
@@ -199,7 +213,13 @@
 		}
 		
 		a {
+			color: #003399;
 			text-decoration: none;
+		}
+		
+		a:hover {
+			color: #0066cc;
+			text-decoration: underline;
 		}
 		
 		ul#header {	
@@ -276,16 +296,7 @@
 		}
 		
 		ul li.item .name {
-			color: #003399;
 			font-weight: bold;
-		}
-		
-		ul li.item .name:hover {
-			color: #0066cc;
-		}
-		
-		ul li.item a:hover {
-			text-decoration: underline;
 		}
 		
 		ul li.item .directory, ul li.item .file {
@@ -327,8 +338,8 @@
 
 	<div id="wrapper">
 		
-		<h1><?php echo htmlentities(getTitle($title)) ?></h1>
-		<h2><?php echo htmlentities(getTitle($subtitle)) ?></h2>
+		<h1><?php echo getTitleHTML($title, $breadcrumbs) ?></h1>
+		<h2><?php echo getTitleHTML($subtitle, $breadcrumbs) ?></h2>
 		
 		<ul id="header">
 			
