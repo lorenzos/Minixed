@@ -155,7 +155,7 @@
 		$params = $_GET;
 		foreach ($changes as $k => $v) if (is_null($v)) unset($params[$k]); else $params[$k] = $v;
 		foreach ($params as $k => $v) $params[$k] = urlencode($k) . '=' . urlencode($v);
-		return empty($params) ? $_self : $_self . '?' . implode($params, '&');
+		return empty($params) ? $_self : $_self . '?' . implode('&', $params);
 	}
 
 ?>
