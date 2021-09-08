@@ -371,7 +371,7 @@
 								$itemURL = buildLink(array('b' => (empty($_browse) ? '' : (string)$_browse . '/') . $item['name']));
 							}
 						} else {
-							$itemURL = (empty($_browse) ? '' : (string)$_browse . '/') . $item['name'];
+							$itemURL = (empty($_browse) ? '' : str_replace(['%2F', '%2f'], '/', rawurlencode((string)$_browse)) . '/') . rawurlencode($item['name']);
 						}
 					?>
 					
