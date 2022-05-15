@@ -37,8 +37,8 @@
 	$_browse = null;
 	if ($browseDirectories) {
 		if (!empty($browseDefault) && !isset($_GET['b'])) $_GET['b'] = $browseDefault;
-		$_GET['b'] = trim(str_replace('\\', '/', @$_GET['b']), '/ ');
-		$_GET['b'] = str_replace(array('/..', '../'), '', @$_GET['b']); // Avoid going up into filesystem
+		$_GET['b'] = trim(str_replace('\\', '/', (string)@$_GET['b']), '/ ');
+		$_GET['b'] = str_replace(array('/..', '../'), '', (string)@$_GET['b']); // Avoid going up into filesystem
 		if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
 	}
 	
@@ -90,9 +90,9 @@
 	$items = ls('.' . (empty($_browse) ? '' : '/' . $_browse), $showDirectories, $showHiddenFiles);
 	
 	// Sort it
-	function sortByName($a, $b) { global $showDirectoriesFirst; return ($a['isdir'] == $b['isdir'] || !$showDirectoriesFirst ? strtolower($a['name']) > strtolower($b['name']) : $a['isdir'] < $b['isdir']); }
-	function sortBySize($a, $b) { return ($a['isdir'] == $b['isdir'] ? $a['size'] > $b['size'] : $a['isdir'] < $b['isdir']); }
-	function sortByTime($a, $b) { return ($a['time'] > $b['time']); }
+	function sortByName($a, $b) { global $showDirectoriesFirst; return ($a['isdir'] == $b['isdir'] || !$showDirectoriesFirst ? strtolower($a['name']) > strtolower($b['name']) : $a['isdir'] < $b['isdir']) ? 1 : -1; }
+	function sortBySize($a, $b) { return ($a['isdir'] == $b['isdir'] ? $a['size'] > $b['size'] : $a['isdir'] < $b['isdir']) ? 1 : -1; }
+	function sortByTime($a, $b) { return ($a['time'] > $b['time']) ? 1 : -1; }
 	switch (@$_GET['s']) {
 		case 'size': $_sort = 'size'; usort($items, 'sortBySize'); break;
 		case 'time': $_sort = 'time'; usort($items, 'sortByTime'); break;
