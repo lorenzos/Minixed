@@ -23,6 +23,7 @@
 	$showFooter = true; // Display the "Powered by" footer
 	$openIndex = $browseDirectories && true; // Open index files present in the current directory if $browseDirectories is enabled
 	$browseDefault = null; // Start on a different "default" directory if $browseDirectories is enabled
+	$ignore = array(); // Names of files and folders to not list (case-sensitive)
 	
 	// =============================
 	// =============================
@@ -39,7 +40,16 @@
 		if (!empty($browseDefault) && !isset($_GET['b'])) $_GET['b'] = $browseDefault;
 		$_GET['b'] = trim(str_replace('\\', '/', (string)@$_GET['b']), '/ ');
 		$_GET['b'] = str_replace(array('/..', '../'), '', (string)@$_GET['b']); // Avoid going up into filesystem
-		if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) $_browse = $_GET['b'];
+		if (!empty($_GET['b']) && $_GET['b'] != '..' && is_dir($_GET['b'])) {
+			$browseIgnored = false;
+			foreach (explode('/', $_GET['b']) as $browseName) {
+				if (!empty($ignore) && is_array($ignore) && in_array($browseName, $ignore)) {
+					$browseIgnored = true;
+					break;
+				}
+			}
+			if (!$browseIgnored) $_browse = $_GET['b']; // Avoid browsing ignored folder names
+		}
 	}
 	
 	// Index open
@@ -67,7 +77,7 @@
 	
 	// I'm not sure this function is really needed...
 	function ls($path, $show_folders = false, $show_hidden = false) {
-		global $_self, $_total, $_total_size;
+		global $_self, $_total, $_total_size, $ignore;
 		$ls = array();
 		$ls_d = array();
 		if (($dh = @opendir($path)) === false) return $ls;
@@ -76,6 +86,7 @@
 			if ($file == $_self) continue;
 			if ($file == '.' || $file == '..') continue;
 			if (!$show_hidden) if (substr($file, 0, 1) == '.') continue;
+			if (!empty($ignore) && is_array($ignore) && in_array($file, $ignore)) continue;
 			$isdir = is_dir($path . $file);
 			if (!$show_folders && $isdir) continue;
 			$item = array('name' => $file, 'isdir' => $isdir, 'size' => $isdir ? 0 : filesize($path . $file), 'time' => filemtime($path . $file));
