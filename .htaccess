@@ -1,0 +1,17 @@
+
+# This .htaccess is optional but adds a couple of options
+
+# All subfolders will be handled by the index.php file, no need to enable other options. 
+# Also, this file blocks any user-entered query so you can secure subfolders with a .htpasswd
+# file bacause the url will be /subfolder/ instead of index.php?b=subfolder
+
+# Turn on rewriting
+RewriteEngine On
+
+# Disable all user-entered queries (like ?b=folder_1)
+RewriteCond %{QUERY_STRING} .
+RewriteRule ^$ /? [R=301,L]
+
+# Rewrite ALL queries to the index file so subfolders are parsed too
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /index.php?b=$1 [NC,L,QSA]
