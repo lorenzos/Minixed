@@ -1,0 +1,8 @@
+# Include this to force the download of files, avoiding opening them in the browser
+# Requires the "headers" Apache module enabled: sudo a2enmod headers
+<FilesMatch "^(?!.*\.php$).*$">
+	ForceType application/octet-stream
+	Header set Content-Type application/octet-stream
+	Header set Content-Disposition attachment
+	Header set X-Content-Type-Options "nosniff"
+</FilesMatch>

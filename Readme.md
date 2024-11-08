@@ -21,6 +21,10 @@ If you want Minixed to work also in subfolders, edit `index.php` setting:
 
 	$browseDirectories = true; // Navigate into sub-folders
 
+To force the download of files, avoiding opening them in the browser, enable the Apache `headers` module and add this [**`.htaccess`**](https://github.com/lorenzos/Minixed/blob/master/.htaccess) file:
+
+	wget https://raw.githubusercontent.com/lorenzos/Minixed/master/.htaccess
+
 Configuration
 -------------
 
