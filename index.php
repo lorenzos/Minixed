@@ -89,7 +89,7 @@
 			if (!empty($ignore) && is_array($ignore) && in_array($file, $ignore)) continue;
 			$isdir = is_dir($path . $file);
 			if (!$show_folders && $isdir) continue;
-			$item = array('name' => $file, 'isdir' => $isdir, 'size' => $isdir ? 0 : filesize($path . $file), 'time' => filemtime($path . $file));
+			$item = array('name' => $file, 'isdir' => $isdir, 'size' => $isdir ? 0 : getFilesize($path . $file), 'time' => filemtime($path . $file));
 			if ($isdir) $ls_d[] = $item; else $ls[] = $item;
 			$_total++;
 			$_total_size += $item['size'];
@@ -131,12 +131,20 @@
 		'size' => 0,
 		'time' => 0
 	));
+
+	// Get filesize correctly (as float) on 32bit systems supporting the st_blksize type (e.g. Linux)
+	function getFilesize($path) {
+		$stat = stat($path);
+		if ($stat['blocks'] > 2048) return $stat['blocks'] * 512.0;
+		return (float)$stat['size'];
+	}
 	
 	// 37.6 MB is better than 39487001
 	function humanizeFilesize($val, $round = 0) {
 		$unit = array('','K','M','G','T','P','E','Z','Y');
-		do { $val /= 1024; array_shift($unit); } while ($val >= 1000);
-		return sprintf('%.'.intval($round).'f', $val) . ' ' . array_shift($unit) . 'B';
+		$round_actual = 0;
+		while ($val >= 1000) { $val /= 1024; array_shift($unit); $round_actual = $round; }
+		return sprintf('%.'.intval($round_actual).'f', $val) . ' ' . array_shift($unit) . 'B';
 	}
 	
 	// Titles parser
